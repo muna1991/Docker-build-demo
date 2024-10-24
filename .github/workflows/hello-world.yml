@@ -10,7 +10,7 @@ on:
 jobs:
   say-hello:
     # Runs this job on a self-hosted runner
-    runs-on: docker-build
+    runs-on: self-hosted
 
     steps:
       # Checkout the repository
