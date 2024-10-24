@@ -20,7 +20,5 @@ jobs:
       - name: Say Hello
         run: |
           echo "Step 1: Setting up the environment"
-          docker image ls
-          pwd
-          whoami
+          ls
 
