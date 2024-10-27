@@ -1,29 +1,26 @@
-# File: .github/workflows/CommonDockerBuild.yml
-
-name: Common Docker Build
+name: Docker Build Reusable Workflow
 
 on:
-  workflow_call:  # This allows other workflows to call this workflow
+  workflow_call:
+    inputs:
+      image_name:
+        required: true
+        type: string
+      tag:
+        required: true
+        type: string
+    # secrets:
+    #   TAG:
+    #     required: true
 
 jobs:
   docker-build:
-    runs-on: self-hosted
-
-    # Optionally, you can define inputs for the reusable workflow
-    inputs:
-      image_name:
-        description: 'The name of the Docker image'
-        required: true
-      tag:
-        description: 'The Docker image tag'
-        required: true
-
+    runs-on: self-hosted  # Define the runner in the reusable workflow itself
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      - name: Docker Build
+
+      - name: Build Docker image
         run: |
-          echo "Building Docker image"
-          ls
+          echo "Building Docker image..."
           docker build -t ${{ inputs.image_name }}:${{ inputs.tag }} .
