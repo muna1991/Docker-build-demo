@@ -21,6 +21,6 @@ jobs:
         run: |
           echo "Step 1: Setting up the environment"
           ls
-          echo ${{ vars.IMAGE_NAME }}
-          echo ${{ vars.TAG }}
+          echo ${{ vars.IMG_NAME }}
+          echo ${{ secrets.TAG }}
 
