@@ -9,6 +9,10 @@ on:
       tag:
         required: true
         type: string
+      custom_command:
+        required: false  # This is optional
+        type: string
+        default: "echo No custom command provided"
     # secrets:
     #   TAG:
     #     required: true
