@@ -1,26 +1,29 @@
-name: Hello World Workflow
+# File: .github/workflows/CommonDockerBuild.yml
 
-# This specifies the event that will trigger the workflow
+name: Common Docker Build
+
 on:
-  push:
-    branches:
-      - main  # This runs the workflow on every push to the "main" branch
+  workflow_call:  # This allows other workflows to call this workflow
 
-# Define the jobs that will run as part of the workflow
 jobs:
-  say-hello:
-    # Runs this job on a self-hosted runner
+  docker-build:
     runs-on: self-hosted
 
+    # Optionally, you can define inputs for the reusable workflow
+    inputs:
+      image_name:
+        description: 'The name of the Docker image'
+        required: true
+      tag:
+        description: 'The Docker image tag'
+        required: true
+
     steps:
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-      # Print "Hello World" to the console
-      - name: Say Hello
+      
+      - name: Docker Build
         run: |
-          echo "Step 1: Setting up the environment"
+          echo "Building Docker image"
           ls
-          echo ${{ vars.IMG_NAME }}
-          echo ${{ secrets.TAG }}
-
+          docker build -t ${{ inputs.image_name }}:${{ inputs.tag }} .
