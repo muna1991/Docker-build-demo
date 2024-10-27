@@ -21,5 +21,5 @@ jobs:
         run: |
           echo "Step 1: Setting up the environment"
           ls
-          docker image build -t alpine:latest .
+          docker image ls
 
