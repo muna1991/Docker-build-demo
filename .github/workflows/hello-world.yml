@@ -21,5 +21,6 @@ jobs:
         run: |
           echo "Step 1: Setting up the environment"
           ls
-          docker image ls
+          echo ${{ vars.IMAGE_NAME }}
+          echo ${{ vars.TAG }}
 
