@@ -31,8 +31,9 @@ jobs:
 
       - name: Build Docker image
         run: |
+          
           echo "Building Docker image for ${{ matrix.environment }} environment..."
-          docker build -t ${{ matrix.environment }}-${{ matrix.environment }} .
+          docker build -t ${{ matrix.environment }}:latest .
 
       # - name: Execute custom command
       #   run: ${{ inputs.custom_command }}
