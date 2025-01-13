@@ -29,15 +29,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set environment variables
-        env:
-          IMAGE_NAME: my-docker-repo/my-app  # Replace with your image name
-          TAG: latest   
-
       - name: Build Docker image
         run: |
           echo "Building Docker image for ${{ matrix.environment }} environment..."
-          docker build -t ${{ matrix.environment }}-${{ env.TAG }} .
+          docker build -t ${{ matrix.environment }}-${{ matrix.environment }} .
 
       # - name: Execute custom command
       #   run: ${{ inputs.custom_command }}
