@@ -1,7 +1,9 @@
 name: Docker Build Reusable Workflow
 
 on:
-  workflow_call:
+  push:
+    branches: main
+  # workflow_call:
     inputs:
       image_name:
         required: true
