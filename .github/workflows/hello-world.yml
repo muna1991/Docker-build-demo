@@ -1,21 +1,9 @@
-name: Docker Build Reusable Workflow
+name: Build Multiple Docker Images
 
 on:
   push:
-    branches: main
-  # workflow_call:
-    # inputs:
-    #   image_name:
-    #     required: true
-    #     type: string
-    #   tag:
-    #     required: false
-    #     type: string
-    #     default: "latest"
-    #   custom_command:
-    #     required: false
-    #     type: string
-    #     default: "echo No custom command provided"
+    branches:
+      - main
 
 jobs:
   docker-build:
@@ -23,18 +11,34 @@ jobs:
 
     strategy:
       matrix:
-        environment: [dev, qa, prod]
+        dockerfile: 
+          - Dockerfile.dev
+          - Dockerfile.qa
+          - Dockerfile.prod
+        context:
+          - ./dev
+          - ./qa
+          - ./prod
+        tag: 
+          - dev
+          - qa
+          - prod
 
     steps:
+      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: |
-          
-          echo "Building Docker image for ${{ matrix.environment }} environment..."
-          docker build -t ${{ matrix.environment }}:latest .
+      # # Log in to DockerHub (optional, if pushing to DockerHub or any registry)
+      # - name: Log in to DockerHub
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKER_USERNAME }}
+      #     password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Execute custom command
-      #   run: ${{ inputs.custom_command }}
-  
+      # Build and push Docker images for each Dockerfile
+      - name: Build and push Docker image
+        run: |
+          echo "Building Docker image using ${{ matrix.dockerfile }}"
+          docker build -t myrepo/myimage:${{ matrix.tag }} -f ${{ matrix.dockerfile }} ${{ matrix.context }}
+          docker image ls
