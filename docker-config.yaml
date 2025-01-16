@@ -1,0 +1,11 @@
+environments:
+  - name: dev
+    dockerfile: ./dev/Dockerfile.dev
+    tag: myapp-dev
+  - name: qa
+    dockerfile: ./qa/Dockerfile.qa
+    tag: myapp-qa
+  - name: prod
+    dockerfile: ./prod/Dockerfile.prod
+    tag: myapp-prod
+    
