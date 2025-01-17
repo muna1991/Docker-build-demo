@@ -16,8 +16,8 @@ jobs:
         id: parse-config
         run: |
           config=$(cat docker-config.yaml | yq -o=json)
-          echo "helloworld" >> $GITHUB_ENV
-          echo $GITHUB_ENV
+          matrix=$(echo $config | jq -c '.environments')
+          echo "matrix=$matrix" >> $GITHUB_ENV
 
   docker-build:
     needs: parse-config
