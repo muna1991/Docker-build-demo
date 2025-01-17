@@ -17,7 +17,6 @@ jobs:
         run: |
           config=$(cat docker-config.yaml | yq eval -o=json)
           echo "matrix=$(echo $config | jq -c '.environments')" >> /tmp/debug.txt
-          cat /tmp/debug.txt
 
   docker-build:
     needs: parse-config
