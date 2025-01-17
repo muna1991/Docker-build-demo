@@ -16,14 +16,14 @@ jobs:
         id: parse-config
         run: |
           config=$(cat docker-config.yaml | yq eval -o=json)
-          echo "matrix=$(echo $config | jq -c '.environments')" >> /tmp/debug.txt
+          echo "matrix=$(echo $config | jq -c '.environments')" >> $GITHUB_OUTPUT
 
   docker-build:
     needs: parse-config
     runs-on: self-hosted
     strategy:
       matrix:
-        config: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+        config: ${{ fromJSON(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
