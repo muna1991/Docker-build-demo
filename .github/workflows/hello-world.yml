@@ -18,6 +18,8 @@ jobs:
           config=$(cat docker-config.yaml | yq -o=json)
           matrix=$(echo $config | jq -c '.environments')
           echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          echo "helloworld" > $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
 
   docker-build:
     needs: parse-config
