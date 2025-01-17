@@ -16,21 +16,19 @@ jobs:
         id: parse-config
         run: |
           config=$(cat docker-config.yaml | yq -o=json)
-          matrix=$(echo $config | jq -c '.environments')
-          echo "matrix=$matrix" >> $GITHUB_ENV
-          echo $GITHUB_ENV
+          echo "::set-output name=matrix::$(echo $config | jq -c '.environments')"
 
-  # docker-build:
-  #   needs: parse-config
-  #   runs-on: self-hosted
-  #   strategy:
-  #     matrix:
-  #       config: ${{ fromJson(needs.parse-config.outputs.matrix) }}
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-  #     - name: Build and Tag Docker Image
-  #       run: |
-  #         echo "Tag: ${{ matrix.config.tag }}"
-  #         echo "Dockerfile: ${{ matrix.config.dockerfile }}"
-  #         docker build -t ${{ matrix.config.tag }} -f ${{ matrix.config.dockerfile }} .
+  docker-build:
+    needs: parse-config
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        config: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build and Tag Docker Image
+        run: |
+          echo "Tag: ${{ matrix.config.tag }}"
+          echo "Dockerfile: ${{ matrix.config.dockerfile }}"
+          docker build -t ${{ matrix.config.tag }} -f ${{ matrix.config.dockerfile }} .
