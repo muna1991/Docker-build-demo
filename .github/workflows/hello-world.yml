@@ -21,14 +21,15 @@ jobs:
   docker-build:
     needs: parse-config
     runs-on: self-hosted
-    strategy:
-      matrix:
-        config: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+    # strategy:
+    #   matrix:
+    #     config: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
       - name: checkout code
         uses: actions/checkout@v3
       - name: Build and tag Docker Image
         run: |
+          echo ${{ fromJson(needs.parse-config.outputs.matrix) }}
           echo ${{ matrix.config.tag }}
           echo ${{ matrix.config.dockerfile }}
           docker build -t ${{ matrix.config.tag }} -f ${{ matrix.config.dockerfile }} .    
