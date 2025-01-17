@@ -1,11 +1,10 @@
 environments:
   - name: dev
-    dockerfile: ./dev/Dockerfile.dev
+    dockerfile: Dockerfile.dev
     tag: myapp-dev
   - name: qa
-    dockerfile: ./qa/Dockerfile.qa
+    dockerfile: Dockerfile.qa
     tag: myapp-qa
   - name: prod
-    dockerfile: ./prod/Dockerfile.prod
+    dockerfile: Dockerfile.prod
     tag: myapp-prod
-    
