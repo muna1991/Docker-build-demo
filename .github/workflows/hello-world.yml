@@ -16,7 +16,6 @@ jobs:
         id: parse-config
         run: |
           config=$(cat docker-config.yaml | yq eval -o=json)
-          echo "matrix=$(echo $config | jq -c '.environments')" >> $GITHUB_OUTPUT
           echo $GITHUB_OUTPUT
 
   docker-build:
