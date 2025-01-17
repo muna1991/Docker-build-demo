@@ -17,7 +17,7 @@ jobs:
         run: |
           config=$(cat docker-config.yaml | yq -o=json)
           echo "helloworld" >> $GITHUB_ENV
-          echo $GITHUB_OUTPUT
+          echo $GITHUB_ENV
 
   docker-build:
     needs: parse-config
