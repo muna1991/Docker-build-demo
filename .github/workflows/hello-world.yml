@@ -6,20 +6,32 @@ on:
       - main
 
 jobs:
+  parse-config:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Parse docker-config.yaml
+        id: parse-config
+        run: |
+          matrix=$(yq eval -o=json '.images' docker-config.yaml)
+          echo "matrix=${matrix}" >> $GITHUB_OUTPUT
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log the current build
+        run: |
+          echo "Building image: ${{ matrix.image.name }}"
+          echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
+          echo "Tagging with: ${{ matrix.image.tag }}"
   docker-build:
+    needs: parse-config
     runs-on: self-hosted
     strategy:
       matrix:
-        image: # Define a matrix for multiple images
-          - name: app-dev
-            dockerfile: Dockerfile.dev
-            tag: myapp-dev:latest
-          - name: app-qa
-            dockerfile: Dockerfile.qa
-            tag: myapp-qa:latest
-          - name: app-prod
-            dockerfile: Dockerfile.prod
-            tag: myapp-prod:latest
+        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -30,14 +42,7 @@ jobs:
           echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
           echo "Tagging with: ${{ matrix.image.tag }}"
 
-      - name: Build Docker image
+      - name: Build Docker Image
         run: |
           docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
 
-      # - name: Push Docker image to registry (Optional)
-      #   env:
-      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      #   run: |
-      #     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      #     docker push ${{ matrix.image.tag }}
