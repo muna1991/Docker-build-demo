@@ -21,13 +21,13 @@ jobs:
             exit 1
           fi
           echo "Matrix JSON: $matrix"
-          echo "matrix={\"include\": $matrix}" >> "$GITHUB_OUTPUT"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
   docker-build:
     needs: parse-config
     runs-on: self-hosted
     strategy:
-      matrix: ${{ fromJson(needs.parse-config.outputs.matrix).include }}
+      matrix: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Log Parsed Matrix
         run: |
