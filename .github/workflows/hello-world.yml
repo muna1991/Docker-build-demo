@@ -15,7 +15,6 @@ jobs:
       - name: Parse docker-config.yaml
         id: parse-config
         run: |
-          set -X
           matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
           echo $matrix
   docker-build:
