@@ -22,23 +22,27 @@ jobs:
           fi
           echo "Matrix JSON: $matrix" # Debugging output
           printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
-          cat $GITHUB_OUTPUT
+          cat $GITHUB_OUTPUT 
   docker-build:
     needs: parse-config
     runs-on: self-hosted
-    strategy:
-      matrix:
-        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+    # strategy:
+    #   matrix:
+    #     image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Log the current build
+      - name: Debug Matrix Output
         run: |
-          echo "Building image: ${{ matrix.image.name }}"
-          echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
-          echo "Tagging with: ${{ matrix.image.tag }}"
+          echo "Matrix received from parse-config: ${{ needs.parse-config.outputs.matrix }}"
 
-      - name: Build Docker image
-        run: |
-          docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
+
+      # - name: Log the current build
+      #   run: |
+      #     echo "Building image: ${{ matrix.image.name }}"
+      #     echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
+      #     echo "Tagging with: ${{ matrix.image.tag }}"
+
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
