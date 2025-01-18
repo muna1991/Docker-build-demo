@@ -26,16 +26,13 @@ jobs:
   docker-build:
     needs: parse-config
     runs-on: self-hosted
-    # strategy:
-    #   matrix:
-    #     image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Debug Matrix Output
+      - name: Log Parsed Matrix
         run: |
-          echo "Matrix received from parse-config: ${{ needs.parse-config.outputs.matrix }}"
-
+          echo "Parsed Matrix: ${{ needs.parse-config.outputs.matrix }}"
 
       # - name: Log the current build
       #   run: |
