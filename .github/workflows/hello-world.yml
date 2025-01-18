@@ -12,16 +12,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Parse docker-config.yaml
-  id: parse-config
-  run: |
-    matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
-    if [[ -z "$matrix" ]]; then
-      echo "Error: Matrix is empty. Check docker-config.yaml."
-      exit 1
-    fi
-    echo "Matrix JSON: $matrix"
-    echo "matrix={\"include\": $matrix}" >> "$GITHUB_OUTPUT"
-    cat $GITHUB_OUTPUT
+        id: parse-config
+        run: |
+          matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
+          if [[ -z "$matrix" ]]; then
+            echo "Error: Matrix is empty. Check docker-config.yaml."
+            exit 1
+          fi
+          echo "Matrix JSON: $matrix"
+          echo "matrix={\"include\": $matrix}" >> "$GITHUB_OUTPUT"
+          cat $GITHUB_OUTPUT
   docker-build:
     needs: parse-config
     runs-on: self-hosted
