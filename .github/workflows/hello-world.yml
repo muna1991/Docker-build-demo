@@ -20,7 +20,7 @@ jobs:
 
   docker-build:
     needs: parse-config
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
