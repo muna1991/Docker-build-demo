@@ -1,9 +1,0 @@
-{
-  "images": [
-    {
-      "name": "app-dev",
-      "dockerfile": "Dockerfile.dev",
-      "tag": "myapp-dev:latest"
-    }
-  ]
-}
