@@ -1,6 +1,6 @@
 jobs:
   parse-config:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -14,7 +14,7 @@ jobs:
 
   docker-build:
     needs: parse-config
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix: 
         image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
