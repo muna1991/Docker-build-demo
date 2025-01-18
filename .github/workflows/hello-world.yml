@@ -15,8 +15,8 @@ jobs:
       - name: Parse docker-config.yaml
         id: parse-config
         run: |
-          matrix=$(yq -o=json '.images' docker-config.yaml)
-          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+          matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
+          printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
 
   docker-build:
     needs: parse-config
