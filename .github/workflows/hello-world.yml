@@ -29,11 +29,12 @@ jobs:
           color: ${{ matrix.color }}
         run: |
           echo "$color" > color
-      - name: Produce Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.color }}
-          path: color
+          echo ${{ matrix.color }}
+      # - name: Produce Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ${{ matrix.color }}
+      #     path: color
 
   # consume-artifacts:
   #   runs-on: ubuntu-latest
