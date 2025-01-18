@@ -1,38 +1,43 @@
+name: Build Multiple Docker Images
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  parse-config:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Parse docker-config.json
-        id: parse-config
-        run: |
-          matrix=$(jq -c '.images' docker-config.json)
-          printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
-          cat $GITHUB_OUTPUT
-
   docker-build:
-    needs: parse-config
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
-      matrix: 
-        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+      matrix:
+        image: # Define a matrix for multiple images
+          - name: app-dev
+            dockerfile: Dockerfile.dev
+            tag: myapp-dev:latest
+          - name: app-qa
+            dockerfile: Dockerfile.qa
+            tag: myapp-qa:latest
+          - name: app-prod
+            dockerfile: Dockerfile.prod
+            tag: myapp-prod:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Log the current build
         run: |
-          echo "Building image: ${{ matrix.name }}"
-          echo "Using Dockerfile: ${{ matrix.dockerfile }}"
-          echo "Tagging with: ${{ matrix.tag }}"
+          echo "Building image: ${{ matrix.image.name }}"
+          echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
+          echo "Tagging with: ${{ matrix.image.tag }}"
 
-      # - name: Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
+
+      # - name: Push Docker image to registry (Optional)
+      #   env:
+      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       #   run: |
-      #     docker build -t ${{ matrix.tag }} -f ${{ matrix.dockerfile }} .
+      #     echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      #     docker push ${{ matrix.image.tag }}
