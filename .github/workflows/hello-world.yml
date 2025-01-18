@@ -27,12 +27,11 @@ jobs:
     needs: parse-config
     runs-on: self-hosted
     strategy:
-      matrix:
-        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.parse-config.outputs.matrix).include }}
     steps:
       - name: Log Parsed Matrix
         run: |
-          echo "Parsed Matrix: ${{ needs.parse-config.outputs.matrix }}"
+          echo "Building with: ${{ matrix.name }}"
 
       # - name: Log the current build
       #   run: |
