@@ -15,12 +15,9 @@ jobs:
       - name: Parse docker-config.yaml
         id: parse-config
         run: |
+          set -X
           matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
-          if [[ -z "$matrix" ]]; then
-            echo "Error: Matrix is empty. Check docker-config.yaml."
-            exit 1
-          fi
-          printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
+          echo $matrix
   docker-build:
     needs: parse-config
     runs-on: self-hosted
