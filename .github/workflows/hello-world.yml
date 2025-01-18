@@ -17,15 +17,6 @@ jobs:
         run: |
           matrix=$(yq eval -o=json '.images' docker-config.yaml)
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Log the current build
-        run: |
-          echo "Building image: ${{ matrix.image.name }}"
-          echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
-          echo "Tagging with: ${{ matrix.image.tag }}"
   docker-build:
     needs: parse-config
     runs-on: self-hosted
