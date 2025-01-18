@@ -16,7 +16,7 @@ jobs:
         id: parse-config
         run: |
           matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
-          echo $matrix
+          printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
   docker-build:
     needs: parse-config
     runs-on: self-hosted
