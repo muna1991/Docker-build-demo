@@ -8,12 +8,14 @@ on:
 jobs:
   parse-config:
     runs-on: self-hosted
+    outputs:
+      matrix: ${{ steps.parse.outputs.matrix }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Parse docker-config.yaml
-        id: parse-config
+        id: parse
         run: |
           matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
           echo "matrix=${matrix}" >> $GITHUB_OUTPUT
@@ -22,7 +24,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        image: ${{fromJson(needs.build.outputs.matrix)}}
+        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
