@@ -1,44 +1,33 @@
-name: Build Multiple Docker Images
-
-on:
-  push:
-    branches:
-      - main 
-
 jobs:
   parse-config:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Parse docker-config.yaml
+      - name: Parse docker-config.json
         id: parse-config
         run: |
-          matrix=$(yq eval -o=json '.images' docker-config.yaml | jq -c '.')
-          if [[ -z "$matrix" ]]; then
-            echo "Error: Matrix is empty. Check docker-config.yaml."
-            exit 1
-          fi
-          echo "Matrix JSON: $matrix"
-          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+          matrix=$(jq -c '.images' docker-config.json)
+          printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
           cat $GITHUB_OUTPUT
+
   docker-build:
     needs: parse-config
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
-      matrix: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+      matrix: 
+        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
     steps:
-      - name: Log Parsed Matrix
-        run: |
-          echo "Building with: ${{ matrix.name }}"
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # - name: Log the current build
-      #   run: |
-      #     echo "Building image: ${{ matrix.image.name }}"
-      #     echo "Using Dockerfile: ${{ matrix.image.dockerfile }}"
-      #     echo "Tagging with: ${{ matrix.image.tag }}"
+      - name: Log the current build
+        run: |
+          echo "Building image: ${{ matrix.name }}"
+          echo "Using Dockerfile: ${{ matrix.dockerfile }}"
+          echo "Tagging with: ${{ matrix.tag }}"
 
       # - name: Build Docker image
       #   run: |
-      #     docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
+      #     docker build -t ${{ matrix.tag }} -f ${{ matrix.dockerfile }} .
