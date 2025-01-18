@@ -22,7 +22,6 @@ jobs:
           fi
           echo "Matrix JSON: $matrix" # Debugging output
           printf "matrix=%s\n" "$matrix" >> "$GITHUB_OUTPUT"
-          cat $GITHUB_OUTPUT
   docker-build:
     needs: parse-config
     runs-on: self-hosted
