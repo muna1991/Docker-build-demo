@@ -28,7 +28,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+        image: ${{ fromJSON(needs.parse-config.outputs.matrix) }}
     steps:
       - name: Log Parsed Matrix
         run: |
