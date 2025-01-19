@@ -1,10 +1,10 @@
 images:
   - name: app-dev
-    dockerfile: Dockerfile.dev
+    dockerfile: dockerfile/Dockerfile.dev
     tag: myapp-dev:latest
   - name: app-qa
-    dockerfile: Dockerfile.qa
+    dockerfile: dockerfile/Dockerfile.qa
     tag: myapp-qa:latest
   - name: app-prod
-    dockerfile: Dockerfile.prod
+    dockerfile: dockerfile/Dockerfile.prod
     tag: myapp-prod:latest
