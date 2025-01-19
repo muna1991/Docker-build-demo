@@ -38,4 +38,21 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
+  Trivy-Scan:
+    needs: Docker-build
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        image: ${{ fromJson(needs.parse-config.outputs.matrix) }}
+    steps:
+      - name: Run Trivy Scan
+        run: |
+          echo "Running Trivy scan on image: ${{ matrix.image.tag }}"
+          trivy image \
+            --format table \
+            --exit-code 1 \
+            --ignore-unfixed \
+            --pkg-types os,library \
+            --severity CRITICAL \
+            ${{ matrix.image.tag }} > trivy-results-${{ matrix.image.name }}.txt || true
 
