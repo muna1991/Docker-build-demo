@@ -39,7 +39,9 @@ jobs:
         run: |
           docker build -t ${{ matrix.image.tag }} -f ${{ matrix.image.dockerfile }} .
   Trivy-Scan:
-    needs: Docker-build
+    needs: 
+      - parse-config
+      - docker-build
     runs-on: self-hosted
     strategy:
       matrix:
